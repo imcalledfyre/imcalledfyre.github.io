@@ -1,116 +1,93 @@
-<!DOCTYPE html>
-<html class="sl-theme-dark" lang="en">
-  <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    setTimeout(() => {
+      // Create overlay elements
+      const overlay = document.createElement("div");
+      overlay.id = "subscription-overlay";
+      overlay.innerHTML = `
+        <div id="overlay-bg"></div>
+        <div id="overlay-content">
+          <h2>Subscribe to Continue</h2>
+          <p>Subscribe now to remove this screen permanently!</p>
+          <button id="subscribe-btn">Subscribe</button>
+          <p>Or wait <span id="countdown">30</span> seconds...</p>
+        </div>
+      `;
 
-    <link rel="stylesheet" href="https://im-the-biggest-bird.vonar.ch/style.css" />
-    <link rel="stylesheet" href="https://im-the-biggest-bird.vonar.ch/themes.css" />
-    <title>Projects | Fyre Games</title>
-    <link rel="icon" href="/favicon.ico" />
+      document.body.appendChild(overlay);
+      document.body.classList.add("blurred"); // Blur background
 
-    <style>
-      #subscribe-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(255, 255, 255, 0.9);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        color: white;
-        z-index: 9999;
-      }
-
-      #subscribe-overlay.hidden {
-        display: none;
-      }
-
-      .sub-btn {
-        background-color: red;
-        color: white;
-        padding: 10px 20px;
-        font-size: 18px;
-        border: none;
-        cursor: pointer;
-        margin: 10px;
-      }
-
-      .wait-btn {
-        background-color: gray;
-        color: white;
-        padding: 10px 20px;
-        font-size: 18px;
-        border: none;
-        cursor: pointer;
-        margin: 10px;
-      }
-    </style>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        if (!Cookies.get("jhjh")) {
-          $("#subscribe-overlay").removeClass("hidden");
-
-          let waitTime = 30;
-          const waitButton = document.getElementById("wait-btn");
-          waitButton.innerText = `Wait ${waitTime} seconds`;
-
-          const interval = setInterval(() => {
-            waitTime--;
-            waitButton.innerText = `Wait ${waitTime} seconds`;
-            if (waitTime <= 0) {
-              clearInterval(interval);
-              waitButton.disabled = false;
-              waitButton.innerText = "Continue Without Subscribing";
-            }
-          }, 1000);
+      // Countdown timer
+      let timeLeft = 30;
+      const countdown = document.getElementById("countdown");
+      const interval = setInterval(() => {
+        timeLeft--;
+        countdown.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(interval);
+          overlay.remove();
+          document.body.classList.remove("blurred");
         }
+      }, 1000);
+
+      // Subscribe button removes overlay permanently
+      document.getElementById("subscribe-btn").addEventListener("click", () => {
+        localStorage.setItem("subscribed", "true");
+        overlay.remove();
+        document.body.classList.remove("blurred");
       });
+    }, 5000);
+  });
 
-      function subscribe() {
-        Cookies.set("jhjh", "true", { expires: 365 });
-        $("#subscribe-overlay").addClass("hidden");
-      }
+  // If already subscribed, don't show overlay
+  if (localStorage.getItem("subscribed") === "true") {
+    document.body.classList.remove("blurred");
+  }
+</script>
 
-      function continueWithoutSubscribing() {
-        $("#subscribe-overlay").addClass("hidden");
-      }
-    </script>
-  </head>
-  <body>
-    <div id="subscribe-overlay" class="hidden">
-      <h1>Support Us by Subscribing!</h1>
-      <p>Subscribe to our channel to remove this screen forever.</p>
-      <a href="https://youtube.com/@imcalledfyre?sub_confirmation=1" target="_blank">
-        <button class="sub-btn" onclick="subscribe()">Subscribe</button>
-      </a>
-      <button id="wait-btn" class="wait-btn" disabled onclick="continueWithoutSubscribing()">
-        Wait 30 seconds
-      </button>
-    </div>
+<style>
+  /* Background blur */
+  .blurred main, .blurred header, .blurred footer {
+    filter: blur(5px);
+  }
 
-    <header>
-      <a href="/index.html">Home</a>
-      <a href="/fyrecraft.html">Fyrecraft</a>
-      <a href="/projects.html">Games</a>
-      <a href="/settings.html">Settings</a>
-      <a href="/support.html">Support</a>
-      <a id="blank" href="#">Open Blank</a>
-      <a href="/about.html">About</a>
-    </header>
-    <main>
-      <input type="text" id="gamesearch" placeholder="Type here to search.." />
-    </main>
-    <footer>
-      <a href="https://github.com/imcalledfyre/fyregames">Source Code</a>
-      <a href="/suggest.html">Bug Reports</a>
-      <a href="/suggest.html">Suggestions</a>
-      <a href="/contact.html">Contact</a>
-    </footer>
-  </body>
-</html>
+  /* Overlay styles */
+  #subscription-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  #overlay-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  #overlay-content {
+    position: relative;
+    background: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    z-index: 1001;
+  }
+
+  #overlay-content button {
+    padding: 10px 20px;
+    background: #7b2cbf;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+</style>
