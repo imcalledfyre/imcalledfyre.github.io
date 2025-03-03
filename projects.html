@@ -206,12 +206,17 @@
             }
           }, 1000);
 
-          // Subscribe button removes overlay permanently
-          document.getElementById("subscribe-btn").addEventListener("click", () => {
-            localStorage.setItem("subscribed", "true");
-            overlay.remove();
-            document.body.classList.remove("blurred");
-          });
+        document.getElementById("subscribe-btn").addEventListener("click", () => {
+  // Open the YouTube subscription link in a new tab
+  window.open("https://youtube.com/@imcalledfyre?sub_confirmation=1", "_blank");
+  // Set flag to remove the overlay permanently
+  localStorage.setItem("subscribed", "true");
+  // Remove overlay and blur
+  const overlay = document.getElementById("subscription-overlay");
+  if (overlay) overlay.remove();
+  document.body.classList.remove("blurred");
+});
+
         }, 5000);
       });
 
