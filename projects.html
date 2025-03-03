@@ -1,93 +1,224 @@
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    setTimeout(() => {
-      // Create overlay elements
-      const overlay = document.createElement("div");
-      overlay.id = "subscription-overlay";
-      overlay.innerHTML = `
-        <div id="overlay-bg"></div>
-        <div id="overlay-content">
-          <h2>Subscribe to Continue</h2>
-          <p>Subscribe now to remove this screen permanently!</p>
-          <button id="subscribe-btn">Subscribe</button>
-          <p>Or wait <span id="countdown">30</span> seconds...</p>
-        </div>
-      `;
+<!DOCTYPE html>
+<html class="sl-theme-dark" lang="en">
+  <head>
+    <!-- initialize theme vars
+    https://coolors.co/10002b-240046-3c096c-5a189a-7b2cbf-9d4edd-c77dff-e0aaff -->
 
-      document.body.appendChild(overlay);
-      document.body.classList.add("blurred"); // Blur background
+    <!-- initialize externals -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src=" https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js "></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.9.0/cdn/themes/dark.css" />
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.9.0/cdn/shoelace-autoloader.js"></script>
+    <!-- initialize my stuff -->
+    <script src="/js/all.js"></script>
+    <script src="/js/games.js"></script>
+    <script src="/js/search.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/themes.js"></script>
+    <script src="/js/cookie.js"></script>
 
-      // Countdown timer
-      let timeLeft = 30;
-      const countdown = document.getElementById("countdown");
-      const interval = setInterval(() => {
-        timeLeft--;
-        countdown.textContent = timeLeft;
-        if (timeLeft <= 0) {
-          clearInterval(interval);
-          overlay.remove();
-          document.body.classList.remove("blurred");
-        }
-      }, 1000);
+    <script src='https://cdn.jsdelivr.net/npm/@widgetbot/crate@3' async defer>
+      new Crate({
+          server: '1148719137238040606', // Fyre Games
+          channel: '1173731814196645909' // #commands
+      })
+    </script>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/themes.css" />
 
-      // Subscribe button removes overlay permanently
-      document.getElementById("subscribe-btn").addEventListener("click", () => {
-        localStorage.setItem("subscribed", "true");
-        overlay.remove();
-        document.body.classList.remove("blurred");
+    <!-- seo + other things -->
+    <title>Projects | Fyre Games</title>
+    <link rel="icon" href="/favicon.ico" />
+
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <!-- toastify -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(() => {
+          const container = document.querySelector("alerts");
+          const safemodealert = container.querySelector(sl-alert.safemodeinfo);
+          const tooltip = document.querySelector('.manual-tooltip');
+          if (Math.random() < 0.33) {
+            safemodealert.toast();
+          } else if (Math.random() < 0.5) {
+            tooltip.open = !tooltip.open;
+            setTimeout(() => {
+              tooltip.open = !tooltip.open;
+            }, 5000)
+          }
+        }, 500);
       });
-    }, 5000);
-  });
+    </script>
 
-  // If already subscribed, don't show overlay
-  if (localStorage.getItem("subscribed") === "true") {
-    document.body.classList.remove("blurred");
-  }
-</script>
+    <!-- Subscription Overlay Styles -->
+    <style>
+      /* Background blur */
+      .blurred main, .blurred header, .blurred footer {
+        filter: blur(5px);
+      }
 
-<style>
-  /* Background blur */
-  .blurred main, .blurred header, .blurred footer {
-    filter: blur(5px);
-  }
+      /* Overlay styles */
+      #subscription-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
 
-  /* Overlay styles */
-  #subscription-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
+      #overlay-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+      }
 
-  #overlay-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-  }
+      #overlay-content {
+        position: relative;
+        background: white;
+        padding: 20px;
+        text-align: center;
+        border-radius: 10px;
+        z-index: 1001;
+      }
 
-  #overlay-content {
-    position: relative;
-    background: white;
-    padding: 20px;
-    text-align: center;
-    border-radius: 10px;
-    z-index: 1001;
-  }
+      #overlay-content button {
+        padding: 10px 20px;
+        background: #7b2cbf;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <alerts>
+    <sl-alert class="safemodeinfo" variant="primary" duration="6000" closable>
+      <sl-icon slot="icon" name="info-circle"></sl-icon>
+      <strong>Looking for Fyrecraft?</strong><br />
+      <!-- We've moved it to the top bar! -->
+    </sl-alert>
+  </alerts>
+  <body>
+    <header>
+      <a href="/index.html">Home</a>
+      <a href="/fyrecraft.html">Fyrecraft</a>
+      <a href="/projects.html">Games</a>
+      <a href="/settings.html">Settings</a>
+      <a href="/support.html">Support</a>
+      <a id="blank" href="#">Open Blank</a>
+      <a href="/about.html">About</a>
+    </header>
+    <main>
+      <div id="adcontainer">
+      </div>
+      <input class="hiddenUpload" type="file" accept=".fyre" hidden />
 
-  #overlay-content button {
-    padding: 10px 20px;
-    background: #7b2cbf;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-</style>
+      <input type="text" id="gamesearch" placeholder="Type here to search.." />
+      <div class="samerow">
+        <sl-tooltip content="Remember to download your save, so you don't lose your progress." trigger="manual" class="manual-tooltip">
+          <button onclick="downloadMainSave()">Download Save</button>
+        </sl-tooltip>
+        <button id="upload" onclick="uploadMainSave()">Upload Save</button>
+      </div>
+      <div class="samerow">
+        <button id="random" onclick="selectRandomGame()">
+          Play a random game!
+        </button>
+        <button id="recommend" onclick="recommendedGames()">
+          Click to view recommended games!
+        </button>
+      </div>
+
+      <h2>Pinned Games</h2>
+      <p id="pinnedmessage">pin some games for things to show up here!</p>
+      <div id="pinned"></div>
+
+      <h2>All Games</h2>
+      <div id="games">
+        <a href="/suggest.html">
+          <div class="suggest">
+            <img src="img/addlink.svg" alt="Add Game logo" style="filter: invert(1);">
+            <h1>Suggest a game!</h1>
+          </div>
+        </a>
+        <p id="message">games loading..</p>
+      </div>
+      <div id="adcontainer">
+        <h3><a href="ad.html">AD (im working to remove these):</a></h3>
+        <div id="container-92108816b5da54426d1639bcbfb5785c"></div>
+      </div>
+    </main>
+
+    <footer>
+      <a href="https://github.com/imcalledfyre/fyregames">Source Code</a>
+      <a id="panicmode">Panic Mode</a>
+      <a href="/transfer.html">Transfer</a>
+      <a href="/suggest.html">Bug Reports</a>
+      <a href="/suggest.html">Suggestions</a>
+      <a href="/contact.html">Contact</a>
+    </footer>
+
+    <!-- Subscription Overlay Script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // If already subscribed, do nothing
+        if (localStorage.getItem("subscribed") === "true") {
+          return;
+        }
+
+        setTimeout(() => {
+          // Create overlay elements
+          const overlay = document.createElement("div");
+          overlay.id = "subscription-overlay";
+          overlay.innerHTML = `
+            <div id="overlay-bg"></div>
+            <div id="overlay-content">
+              <h2>Subscribe to Continue</h2>
+              <p>Subscribe now to remove this screen permanently!</p>
+              <button id="subscribe-btn">Subscribe</button>
+              <p>Or wait <span id="countdown">30</span> seconds...</p>
+            </div>
+          `;
+
+          document.body.appendChild(overlay);
+          document.body.classList.add("blurred"); // Blur background
+
+          // Countdown timer
+          let timeLeft = 30;
+          const countdown = document.getElementById("countdown");
+          const interval = setInterval(() => {
+            timeLeft--;
+            countdown.textContent = timeLeft;
+            if (timeLeft <= 0) {
+              clearInterval(interval);
+              overlay.remove();
+              document.body.classList.remove("blurred");
+            }
+          }, 1000);
+
+          // Subscribe button removes overlay permanently
+          document.getElementById("subscribe-btn").addEventListener("click", () => {
+            localStorage.setItem("subscribed", "true");
+            overlay.remove();
+            document.body.classList.remove("blurred");
+          });
+        }, 5000);
+      });
+
+      // If already subscribed, ensure the background isn't blurred
+      if (localStorage.getItem("subscribed") === "true") {
+        document.body.classList.remove("blurred");
+      }
+    </script>
+  </body>
+</html>
