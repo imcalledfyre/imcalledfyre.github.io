@@ -183,10 +183,11 @@
           overlay.innerHTML = `
             <div id="overlay-bg"></div>
             <div id="overlay-content">
-              <h2>Subscribe to Continue</h2>
+              <h2>Subscribe plz</h2>
               <p>Subscribe now to remove this screen permanently!</p>
+              <h3>I've lowered the time to 5 seconds your welcome</h3>
               <button id="subscribe-btn">Subscribe</button>
-              <p>Or wait <span id="countdown">30</span> seconds...</p>
+              <p>Or wait <span id="countdown">5</span> seconds...</p>
             </div>
           `;
 
@@ -194,7 +195,7 @@
           document.body.classList.add("blurred"); // Blur background
 
           // Countdown timer
-          let timeLeft = 30;
+          let timeLeft = 5;
           const countdown = document.getElementById("countdown");
           const interval = setInterval(() => {
             timeLeft--;
