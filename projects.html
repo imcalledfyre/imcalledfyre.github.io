@@ -183,11 +183,11 @@
           overlay.innerHTML = `
             <div id="overlay-bg"></div>
             <div id="overlay-content">
-              <h2>Subscribe plz</h2>
-              <p>Subscribe now to remove this screen permanently!</p>
-              <h3>I've lowered the time to 5 seconds your welcome</h3>
-              <button id="subscribe-btn">Subscribe</button>
-              <p>Or wait <span id="countdown">5</span> seconds...</p>
+              <h2>You should try Fyrecraft!</h2>
+              <p>Season 4 just started and its a great social place!</p>
+              <h3>If you dont play then your not invited to my birthday party../h3>
+              <button id="subscribe-btn">sure ill play</button>
+              <p>Or wait <span id="countdown">5</span> seconds for this to close</p>
             </div>
           `;
 
@@ -205,13 +205,13 @@
               overlay.remove();
               document.body.classList.remove("blurred");
             }
-          }, 1000);
+          }, 800);
 
         document.getElementById("subscribe-btn").addEventListener("click", () => {
   // Open the YouTube subscription link in a new tab
-  window.open("https://youtube.com/@imcalledfyre?sub_confirmation=1", "_blank");
+  window.open("https://im-the-biggest-bird.vonar.ch/fyrecraft.html", "_blank");
   // Set flag to remove the overlay permanently
-  localStorage.setItem("subscribed", "true");
+  localStorage.setItem("fyrecraft", "true");
   // Remove overlay and blur
   const overlay = document.getElementById("subscription-overlay");
   if (overlay) overlay.remove();
@@ -222,7 +222,7 @@
       });
 
       // If already subscribed, ensure the background isn't blurred
-      if (localStorage.getItem("subscribed") === "true") {
+      if (localStorage.getItem("fyrecraft") === "true") {
         document.body.classList.remove("blurred");
       }
     </script>
