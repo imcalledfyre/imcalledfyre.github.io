@@ -172,7 +172,7 @@
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         // If already subscribed, do nothing
-        if (localStorage.getItem("subscribed") === "true") {
+        if (localStorage.getItem("fyrecraft") === "true") {
           return;
         }
 
@@ -185,7 +185,7 @@
             <div id="overlay-content">
               <h2>You should try Fyrecraft!</h2>
               <p>Season 4 just started and its a great social place!</p>
-              <h3>If you dont play then your not invited to my birthday party../h3>
+              <h3>If you dont play then your not invited to my birthday party..</h3>
               <button id="subscribe-btn">sure ill play</button>
               <p>Or wait <span id="countdown">5</span> seconds for this to close</p>
             </div>
@@ -205,7 +205,7 @@
               overlay.remove();
               document.body.classList.remove("blurred");
             }
-          }, 800);
+          }, 1100);
 
         document.getElementById("subscribe-btn").addEventListener("click", () => {
   // Open the YouTube subscription link in a new tab
